@@ -7,6 +7,8 @@ const jwt=require("jsonwebtoken")
 
 const users=require("./model/user")
 const {userModel}=require("./model/user")
+const recipes=require("./model/recipe")
+const {recipeModel}=require("./model/recipe")
  
 const app=express()
 app.use(cors())
@@ -66,6 +68,15 @@ app.post("/signin",(req,res)=>{
 })
 
 
+app.post("/addRecipe",(req,res)=>{
+
+    let input=req.body
+    //console.log(input)
+    let recipe=new recipeModel(input)
+    console.log(recipe)
+    recipe.save()
+    res.json({"status":"success"})
+})
 
 
 
