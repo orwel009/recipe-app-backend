@@ -46,7 +46,7 @@ app.post("/signin",(req,res)=>{
         bcryptjs.compare(input.password,dbPassword,(error,isMatch)=>{
             if (isMatch) {
                 //res.json({"status":"success"})
-                jwt.sign({email:input.email},"recipeapp",{expiresIn:"1d"},
+                jwt.sign({email:input.email},"recipe-app",{expiresIn:"1d"},
                 (error,token)=>{
                     if (error) {
                         res.json({"status":"unable to create token"})
@@ -73,11 +73,35 @@ app.post("/addRecipe",(req,res)=>{
     let input=req.body
     //console.log(input)
     let recipe=new recipeModel(input)
-    console.log(recipe)
+    // console.log(recipe)
     recipe.save()
     res.json({"status":"success"})
 })
 
+
+app.post("/search",(req,res)=>{
+    let token=req.headers["token"]
+    let input=req.body
+    jwt.verify(token,"recipe-app",(error,decoded)=>{
+        if (error) {
+            res.json({"status":"unauthorised access"})
+        } else {
+            if(decoded){
+                recipeModel.find(input).then(
+                    (data)=>{
+                        res.json(data)
+                    }
+                ).catch(
+                    (error)=>{
+                        res.json(error)
+                    }
+                )
+            }
+            
+        }
+    })
+   // res.json({"status":"success"})
+})
 
 
 app.listen(8080,()=>{
