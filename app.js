@@ -127,6 +127,31 @@ app.post("/viewRecipe",(req,res)=>{
    // res.json({"status":"success"})
 })
 
+
+app.post("/deleteRecipe",(req,res)=>{
+    let token=req.headers["token"]
+    let input=req.body
+    jwt.verify(token,"recipe-app",(error,decoded)=>{
+        if (error) {
+            res.json({"status":"unauthorised access"})
+        } else {
+            if(decoded){
+                recipeModel.findByIdAndDelete(input._id).then(
+                    (response)=>{
+                        res.json({"status":"success"})
+                    }
+                ).catch(
+                    (error)=>{
+                        res.json(error)
+                    }
+                )
+            }
+            
+        }
+    })
+   // res.json({"status":"success"})
+})
+
 app.listen(8080,()=>{
     console.log("server started")
 })
