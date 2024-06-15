@@ -103,6 +103,29 @@ app.post("/search",(req,res)=>{
    // res.json({"status":"success"})
 })
 
+app.post("/viewRecipe",(req,res)=>{
+    let token=req.headers["token"]
+    
+    jwt.verify(token,"recipe-app",(error,decoded)=>{
+        if (error) {
+            res.json({"status":"unauthorised access"})
+        } else {
+            if(decoded){
+                recipeModel.find().then(
+                    (data)=>{
+                        res.json(data)
+                    }
+                ).catch(
+                    (error)=>{
+                        res.json(error)
+                    }
+                )
+            }
+            
+        }
+    })
+   // res.json({"status":"success"})
+})
 
 app.listen(8080,()=>{
     console.log("server started")
